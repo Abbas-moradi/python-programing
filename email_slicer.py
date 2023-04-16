@@ -1,6 +1,7 @@
 def main():
+    print("---------------------------")
     print(" Welcome to the email slicer ")
-    print("")
+    print("---------------------------")
 
     email_input = input("Input your email address: ")
 

@@ -16,7 +16,10 @@ def create_access_token(subject: Union[str, Any] = None, expires_delta: int = 30
     key = "abbas"  # the secret key
     roll = {"user": "regular"}
     encoded = jwt.encode(roll, key, algorithm="HS256")
+
+    # the follow cod with encod token for test
     # encoded = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lIjoicGF5bG9hZCJ9
     # .lyeiqhev9lfuwQsCEtcvLjHj2CjHFeyqqmyBUznBPdc'
     # token = jwt.decode(encoded, key, algorithms="HS256")
+    
     return encoded

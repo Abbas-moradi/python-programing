@@ -21,5 +21,5 @@ def create_access_token(subject: Union[str, Any] = None, expires_delta: int = 30
     # encoded = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lIjoicGF5bG9hZCJ9
     # .lyeiqhev9lfuwQsCEtcvLjHj2CjHFeyqqmyBUznBPdc'
     # token = jwt.decode(encoded, key, algorithms="HS256")
-    
+
     return encoded

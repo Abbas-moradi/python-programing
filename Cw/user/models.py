@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class RollUser(Enum):
-    admin= 'admin'
+    admin = 'admin'
     regular = 'regular'
 
 

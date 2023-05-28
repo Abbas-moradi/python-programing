@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from user.models import UserIn, UserUpdate, UserLogin
-from database import users, user_jwt
-from user.utilse import hash_pass, verify_password, create_access_token
+from database import users, user_jwt, sessions
+from user.utilse import hash_pass, verify_password, create_access_token, create_session
 
 user_router = APIRouter(tags=['user'])
 
@@ -25,6 +25,7 @@ def login_user(user: UserLogin):
         raise HTTPException(404, "username or password invalid")
     token = create_access_token()
     user_jwt[user.user_name] = token
+    create_session(user.user_name)
     return {user.user_name: "token created..."}
 
 
@@ -67,5 +68,12 @@ def delete_user(username: str):
 def get_all_token():
     repo = []
     for item in user_jwt.items():
+        repo.append(item)
+    return repo
+
+@update_user.get("/session")
+def get_all_session():
+    repo = []
+    for item in sessions.items():
         repo.append(item)
     return repo

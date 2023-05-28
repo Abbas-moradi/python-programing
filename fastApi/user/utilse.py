@@ -30,7 +30,7 @@ def decode_access_token(user_name: str = None, token: str = None):
 
 def create_session(username: str) -> str:
     session_id = secrets.token_hex(16)  # Generate a random session ID
-    login_time = datetime.datetime.now()  # Get the current login time
+    login_time = datetime.now()  # Get the current login time
     
     session_data = {
         "username": username,

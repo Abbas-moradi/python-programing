@@ -71,7 +71,7 @@ def get_all_token():
         repo.append(item)
     return repo
 
-@update_user.get("/session")
+@user_router.get("/session")
 def get_all_session():
     repo = []
     for item in sessions.items():

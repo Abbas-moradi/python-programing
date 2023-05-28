@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from post.models import Post, PostUpdate
-from database import posts, users
+from database import posts, users, user_jwt
 
 post_router = APIRouter(tags=["post"])
 
@@ -9,6 +9,8 @@ post_router = APIRouter(tags=["post"])
 def add_post(post: Post):
     if post.author not in users.keys():
         raise HTTPException(404, "invalid author")
+    if post.author not in user_jwt:
+        raise HTTPException(422, "author not in login")
     posts[len(posts) + 1] = {
         "title": post.title,
         "content": post.content,

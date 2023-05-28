@@ -2,6 +2,8 @@ from hashlib import sha256
 from datetime import datetime, timedelta
 from typing import Any, Union
 import jwt
+import secrets
+from database import sessions
 
 
 def hash_pass(password):
@@ -24,3 +26,17 @@ def decode_access_token(user_name: str = None, token: str = None):
     key = "abbas"  # the secret key
     token_decode = jwt.decode(encoded, key, algorithms="HS256")
     return token_decode
+
+
+def create_session(username: str) -> str:
+    session_id = secrets.token_hex(16)  # Generate a random session ID
+    login_time = datetime.datetime.now()  # Get the current login time
+    
+    session_data = {
+        "username": username,
+        "login_time": login_time,
+    }
+    
+    sessions[session_id] = session_data  # Store the session data in the in-memory data structure
+    
+    return session_id

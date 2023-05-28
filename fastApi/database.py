@@ -2,3 +2,4 @@
 users = {}
 posts = {}
 user_jwt = {}
+sessions = {}

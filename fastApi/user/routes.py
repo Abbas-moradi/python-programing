@@ -25,7 +25,7 @@ def login_user(user: UserLogin):
         raise HTTPException(404, "username or password invalid")
     token = create_access_token()
     user_jwt[user.user_name] = token
-    return {user.user_name: token}
+    return {user.user_name: "token created..."}
 
 
 @user_router.get("/users")

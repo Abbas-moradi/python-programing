@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from post.models import Post, PostUpdate
 from database import posts, users, user_jwt
+from user.utilse import decode_access_token
 
 post_router = APIRouter(tags=["post"])
 
@@ -42,6 +43,13 @@ def get_all_post(id: int):
 def update_post(id: int, update: PostUpdate):
     if not posts.get(id):
         raise HTTPException(404, detail="post does not exists")
+    if not users.get(update.user_name):
+        raise HTTPException(404, "user not found...")
+    if not user_jwt.get(update.user_name):
+        raise HTTPException(404, "user not found...")
+    decode_token = decode_access_token(update.user_name, user_jwt.get(update.user_name))
+    if decode_token.valuse() != "admin":
+        raise HTTPException(422, "you are not update post, admin just a update post...")
     posts[id] = {"title": update.title, "content": update.content, "author": posts[id]['author']}
     return {id: "info changed successfully"}
 

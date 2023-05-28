@@ -39,7 +39,7 @@ def get_all_users():
 
 
 @user_router.get("/users/{username}")
-def get_all_users(username: str):
+def get_user_by_name(username: str):
     user = users.get(username)
     if user: 
         return {username: users[username]['email']}
@@ -61,3 +61,11 @@ def delete_user(username: str):
         raise HTTPException(404, detail='user does not exists')
     users.pop(username)
     return {username: 'user deleted successfully.'}
+
+
+@user_router.get("/token")
+def get_all_token():
+    repo = []
+    for item in user_jwt.items():
+        repo.append(item)
+    return repo

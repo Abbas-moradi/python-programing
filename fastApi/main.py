@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi.security import OAuth2PasswordBearer
 import uvicorn
 from user.routes import user_router
 from post.routes import post_router

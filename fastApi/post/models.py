@@ -8,5 +8,6 @@ class Post(BaseModel):
 
 
 class PostUpdate(BaseModel):
+    user_name: str
     title: str
     content: str

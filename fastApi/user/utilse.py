@@ -37,6 +37,6 @@ def create_session(username: str) -> str:
         "login_time": login_time,
     }
     
-    sessions[session_id] = session_data  # Store the session data in the in-memory data structure
+    sessions[session_id] = session_data  # Store the session data in the fake database by sessions
     
     return session_id

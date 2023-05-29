@@ -48,7 +48,7 @@ def update_post(id: int, update: PostUpdate):
     if not user_jwt.get(update.user_name):
         raise HTTPException(404, "user not found...")
     decode_token = decode_access_token(update.user_name, user_jwt.get(update.user_name))
-    if decode_token["user"] != "admin":
+    if decode_token[update.user_name] != "admin":
         raise HTTPException(422, "you are not update post, admin just a update post...")
     posts[id] = {"title": update.title, "content": update.content, "author": posts[id]['author']}
     return {id: "info changed successfully"}

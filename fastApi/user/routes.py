@@ -13,7 +13,7 @@ def add_user(user: UserIn):
     for item in users.values():
         if item["email"] == user.email:
             raise HTTPException(403, "the email has been exists")
-    users[user.user_name] = {'email' : user.email, 'password': hash_pass(user.password)}
+    users[user.user_name] = {'email' : user.email, 'password': hash_pass(user.password), 'roll': user.roll}
     return {user.user_name: 'user created successfully'}
 
 
@@ -24,11 +24,12 @@ def login_user(user: UserLogin):
     if not verify_password(user.password, users[user.user_name]['password']):
         raise HTTPException(404, "username or password invalid")
     
-    roll = next((users[item]['roll'] for item in users.keys() if users[item]['user_name'] == user.user_name), None)
+    roll = next((users[_user]['roll'] for _user in users.keys() if _user == user.user_name), None)
+    # roll = next((users[item]['roll'] for item in users.keys() if users[item]['user_name'] == user.user_name), None)
 
     token = create_access_token(user.user_name, roll, create_session(user.user_name))
     user_jwt[user.user_name] = token
-    return {user.user_name: "token created...", "roll": roll}
+    return {user.user_name: "token created..."}
 
 
 @user_router.get("/users")

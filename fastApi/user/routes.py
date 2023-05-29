@@ -23,10 +23,12 @@ def login_user(user: UserLogin):
         raise HTTPException(404, "username or password invalid")
     if not verify_password(user.password, users[user.user_name]['password']):
         raise HTTPException(404, "username or password invalid")
-    token = create_access_token()
+    
+    roll = next((users[item]['roll'] for item in users.keys() if users[item]['user_name'] == user.user_name), None)
+
+    token = create_access_token(user.user_name, roll, create_session(user.user_name))
     user_jwt[user.user_name] = token
-    create_session(user.user_name)
-    return {user.user_name: "token created..."}
+    return {user.user_name: "token created...", "roll": roll}
 
 
 @user_router.get("/users")

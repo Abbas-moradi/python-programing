@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import Any, Union
 import jwt
 import secrets
-from database import sessions
+from database import sessions, secret_key
 
 
 def hash_pass(password):
@@ -14,17 +14,19 @@ def verify_password(password: str, hashed_pass: str) -> bool:
     return hash_pass(password) == hashed_pass
 
 
-def create_access_token(subject: Union[str, Any] = None, expires_delta: int = 30):
-    key = "abbas"  # the secret key
-    roll = {"user": "regular"}
-    encoded = jwt.encode(roll, key, algorithm="HS256")
+def create_access_token(user_name: str = None, roll: str = None, session: dict = None):
+    key = secret_key  # the secret key
+    auth = {user_name: roll, "session": session}
+    encoded = jwt.encode(auth, key, algorithm="HS256")
     return encoded
 
 
 def decode_access_token(user_name: str = None, token: str = None):
     encoded = token
-    key = "abbas"  # the secret key
+    key = secret_key  # the secret key
+
     token_decode = jwt.decode(encoded, key, algorithms="HS256")
+    
     return token_decode
 
 

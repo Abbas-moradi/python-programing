@@ -14,9 +14,9 @@ def verify_password(password: str, hashed_pass: str) -> bool:
     return hash_pass(password) == hashed_pass
 
 
-def create_access_token(user_name: str = None, roll: str = None, session: Optional[dict] = None):
+def create_access_token(user_name: str = None, roll: str = None, session: Optional[Any] = None):
     key = secret_key  # the secret key
-    auth = {user_name: roll, "session": session}
+    auth = {roll: session}
     encoded = jwt.encode(auth, key, algorithm="HS256")
     return encoded
 

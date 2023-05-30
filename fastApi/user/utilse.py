@@ -1,6 +1,6 @@
 from hashlib import sha256
 from datetime import datetime, timedelta
-from typing import Any, Union
+from typing import Any, Union, Optional
 import jwt
 import secrets
 from database import sessions, secret_key
@@ -14,7 +14,7 @@ def verify_password(password: str, hashed_pass: str) -> bool:
     return hash_pass(password) == hashed_pass
 
 
-def create_access_token(user_name: str = None, roll: str = None, session: dict = None):
+def create_access_token(user_name: str = None, roll: str = None, session: Optional[dict] = None):
     key = secret_key  # the secret key
     auth = {user_name: roll, "session": session}
     encoded = jwt.encode(auth, key, algorithm="HS256")

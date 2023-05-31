@@ -68,10 +68,9 @@ def update_user(admin: str, update:UserUpdate):
         raise HTTPException(404, detail='admin not loging...')
     if not users.get(update.user_name):
         raise HTTPException(404, detail='user does not exists')
-    Primary_username = next((Primary_username for name in users.keys() if Primary_username == name),None)
     
 
-    users[Primary_username] = {'email': update.email, 'password': update.password, 'user_roll': update.user_roll}
+    users[update.user_name] = {'email': update.email, 'password': update.password, 'user_roll': update.user_roll}
     return {update.username: 'info changed successfully'}
 
 

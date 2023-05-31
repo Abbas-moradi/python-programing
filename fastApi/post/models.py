@@ -14,4 +14,3 @@ class PostUpdate(BaseModel):
 
 class PostDelete(BaseModel):
     user_name: str
-    id: int

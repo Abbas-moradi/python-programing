@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from user.models import UserIn, UserUpdate, UserLogin, UserLogout
 from database import users, user_jwt, sessions
 from user.utilse import hash_pass, verify_password, create_access_token, create_session, decode_access_token
+from datetime import datetime, timedelta
 
 user_router = APIRouter(tags=['user'])
 
@@ -62,18 +63,22 @@ def get_user_by_name(username: str):
 
 @user_router.put("/users/{username}")
 def update_user(admin: str, update:UserUpdate):
-    decode_token = decode_access_token(update.user_name, user_jwt.get(update.user_name))
-    if "admin" not in decode_token:
-        raise HTTPException(422, f"The user {admin} is not an admin")
     if not users.get(admin):
-        raise HTTPException(404, detail='admin does not exists')
+        raise HTTPException(404, detail='user does not exists')
     if not user_jwt.get(admin):
         raise HTTPException(404, detail='admin not loging...')
+    decode_token = decode_access_token(update.user_name, user_jwt.get(admin))
+    # login_time = datetime.strptime(decode_token['login_time'], '%Y-%m-%d %H:%M:%S')
+    return decode_token['login_time']
+    if login_time + timedelta(seconds=decode_token['expire_time']) < datetime.now():
+        raise HTTPException(422, 'Token is expire...')
+    if "admin" not in decode_token[admin]:
+        raise HTTPException(422, f"The user {admin} is not an admin")
     if not users.get(update.user_name):
         raise HTTPException(404, detail='user does not exists')
     
     users[update.user_name] = {'email': update.email, 'password': update.password, 'user_roll': update.user_roll}
-    return {update.username: 'info changed successfully'}
+    return {update.user_name: 'info changed successfully'}
 
 
 @user_router.delete("/user/{username}")

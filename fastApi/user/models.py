@@ -20,6 +20,11 @@ class UserLogin(BaseModel):
     password: str
 
 
+class UserLogout(BaseModel):
+    user_name: str
+
+
+
 class UserUpdate(BaseModel):
     email: Optional[str]
     password: Optional[str]

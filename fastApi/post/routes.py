@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from post.models import Post, PostUpdate
+from post.models import Post, PostUpdate, PostDelete
 from database import posts, users, user_jwt
 from user.utilse import decode_access_token
 
@@ -55,8 +55,16 @@ def update_post(id: int, update: PostUpdate):
 
 
 @post_router.delete("/post/{id}")
-def delete_post(id: int):
-    if id not in posts.keys():
+def delete_post(id: int, delete: PostDelete):
+    if not posts.get(id):
         raise HTTPException(404, detail="post does not exists")
+    if not users.get(delete.user_name):
+        raise HTTPException(404, "user not found...")
+    if not user_jwt.get(delete.user_name):
+        raise HTTPException(404, "user not found...")
+    decode_token = decode_access_token(delete.user_name, user_jwt.get(delete.user_name))
+    if "admin" not in decode_token[delete.user_name]:
+        raise HTTPException(422, "you are not update post, admin just a update post...")
+    
     posts.pop(id)
     return {id: "post deleted successfully."}

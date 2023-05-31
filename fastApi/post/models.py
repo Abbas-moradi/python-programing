@@ -11,3 +11,7 @@ class PostUpdate(BaseModel):
     user_name: str
     title: str
     content: str
+
+class PostDelete(BaseModel):
+    user_name: str
+    id: int

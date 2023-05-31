@@ -25,6 +25,7 @@ def login_user(user: UserLogin):
         raise HTTPException(404, "username or password invalid")
     if user.user_name in user_jwt:
         raise HTTPException(422, "The user is already logged in")
+    
     roll = next((users[_user]['roll'] for _user in users.keys() if _user == user.user_name), None)
 
     token = create_access_token(user.user_name, roll, create_session(user.user_name))

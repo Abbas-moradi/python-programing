@@ -64,7 +64,7 @@ def get_user_by_name(username: str):
 @user_router.put("/users/{username}")
 def update_user(admin: str, update:UserUpdate):
     if not users.get(admin):
-        raise HTTPException(404, detail='user does not exists')
+        raise HTTPException(404, detail='admin does not exists')
     if not user_jwt.get(admin):
         raise HTTPException(404, detail='admin not loging...')
     decode_token = decode_access_token(update.user_name, user_jwt.get(admin))
@@ -82,8 +82,19 @@ def update_user(admin: str, update:UserUpdate):
 
 
 @user_router.delete("/user/{username}")
-def delete_user(username: str):
-    if username not in users.keys():
+def delete_user(username: str, admin: str):
+    if not users.get(admin):
+        raise HTTPException(404, detail='admin does not exists')
+    if not user_jwt.get(admin):
+        raise HTTPException(404, detail='admin not loging...')
+    decode_token = decode_access_token(username, user_jwt.get(admin))
+    login_time = datetime.strptime(decode_token['login_time'], "%Y-%m-%d %H:%M:%S.%f")
+    if login_time + timedelta(seconds=decode_token['expire_time']) < datetime.now():
+        user_jwt.pop(admin)
+        raise HTTPException(422, 'Token is expire...')
+    if "admin" not in decode_token[admin]:
+        raise HTTPException(422, f"The user {admin} is not an admin")
+    if not users.get(username):
         raise HTTPException(404, detail='user does not exists')
     users.pop(username)
     return {username: 'user deleted successfully.'}

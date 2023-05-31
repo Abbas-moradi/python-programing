@@ -61,11 +61,18 @@ def get_user_by_name(username: str):
         
 
 @user_router.put("/users/{username}")
-def update_user(username: str, update:UserUpdate):
-    if not users.get(username):
+def update_user(admin: str, update:UserUpdate):
+    if not users.get(admin):
+        raise HTTPException(404, detail='admin does not exists')
+    if not user_jwt.get(admin):
+        raise HTTPException(404, detail='admin not loging...')
+    if not users.get(update.user_name):
         raise HTTPException(404, detail='user does not exists')
-    users[username] = {'email': update.email, 'password': update.password}
-    return {username: 'info changed successfully'}
+    Primary_username = next((Primary_username for name in users.keys() if Primary_username == name),None)
+    
+
+    users[Primary_username] = {'email': update.email, 'password': update.password, 'user_roll': update.user_roll}
+    return {update.username: 'info changed successfully'}
 
 
 @user_router.delete("/user/{username}")

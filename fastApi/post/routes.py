@@ -61,7 +61,7 @@ def delete_post(id: int, delete: PostDelete):
     if not users.get(delete.user_name):
         raise HTTPException(404, "user not found...")
     if not user_jwt.get(delete.user_name):
-        raise HTTPException(404, "user not found...")
+        raise HTTPException(404, "user not loging...")
     decode_token = decode_access_token(delete.user_name, user_jwt.get(delete.user_name))
     if "admin" not in decode_token[delete.user_name]:
         raise HTTPException(422, "you are not delete post, admin just a delete post...")

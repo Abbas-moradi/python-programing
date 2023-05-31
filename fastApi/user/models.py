@@ -26,5 +26,7 @@ class UserLogout(BaseModel):
 
 
 class UserUpdate(BaseModel):
+    user_name: Optional[str]
     email: Optional[str]
     password: Optional[str]
+    user_roll: Optional[str]

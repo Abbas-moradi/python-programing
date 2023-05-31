@@ -68,8 +68,7 @@ def update_user(admin: str, update:UserUpdate):
     if not user_jwt.get(admin):
         raise HTTPException(404, detail='admin not loging...')
     decode_token = decode_access_token(update.user_name, user_jwt.get(admin))
-    # login_time = datetime.strptime(decode_token['login_time'], '%Y-%m-%d %H:%M:%S')
-    return decode_token['login_time']
+    login_time = datetime.strptime(decode_token['login_time'], "%Y-%m-%d %H:%M:%S.%f")
     if login_time + timedelta(seconds=decode_token['expire_time']) < datetime.now():
         raise HTTPException(422, 'Token is expire...')
     if "admin" not in decode_token[admin]:

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from user.models import UserIn, UserUpdate, UserLogin, UserLogout
 from database import users, user_jwt, sessions
-from user.utilse import hash_pass, verify_password, create_access_token, create_session
+from user.utilse import hash_pass, verify_password, create_access_token, create_session, decode_access_token
 
 user_router = APIRouter(tags=['user'])
 
@@ -62,6 +62,9 @@ def get_user_by_name(username: str):
 
 @user_router.put("/users/{username}")
 def update_user(admin: str, update:UserUpdate):
+    decode_token = decode_access_token(update.user_name, user_jwt.get(update.user_name))
+    if "admin" not in decode_token:
+        raise HTTPException(422, f"The user {admin} is not an admin")
     if not users.get(admin):
         raise HTTPException(404, detail='admin does not exists')
     if not user_jwt.get(admin):
@@ -69,7 +72,6 @@ def update_user(admin: str, update:UserUpdate):
     if not users.get(update.user_name):
         raise HTTPException(404, detail='user does not exists')
     
-
     users[update.user_name] = {'email': update.email, 'password': update.password, 'user_roll': update.user_roll}
     return {update.username: 'info changed successfully'}
 

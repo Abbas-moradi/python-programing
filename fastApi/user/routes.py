@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from user.models import UserIn, UserUpdate, UserLogin
+from user.models import UserIn, UserUpdate, UserLogin, UserLogout
 from database import users, user_jwt, sessions
 from user.utilse import hash_pass, verify_password, create_access_token, create_session
 
@@ -23,12 +23,21 @@ def login_user(user: UserLogin):
         raise HTTPException(404, "username or password invalid")
     if not verify_password(user.password, users[user.user_name]['password']):
         raise HTTPException(404, "username or password invalid")
-    
+    if user.user_name in user_jwt:
+        raise HTTPException(422, "The user is already logged in")
     roll = next((users[_user]['roll'] for _user in users.keys() if _user == user.user_name), None)
 
     token = create_access_token(user.user_name, roll, create_session(user.user_name))
     user_jwt[user.user_name] = token
     return {user.user_name: "token created..."}
+
+
+@user_router.post('/log_out')
+def logout_user(user: UserLogout):
+    if user.user_name not in users:
+        raise HTTPException(404, 'user not found...')
+    user_jwt.pop(user.user_name)
+    return {user.user_name: "log out..."}
 
 
 @user_router.get("/users")

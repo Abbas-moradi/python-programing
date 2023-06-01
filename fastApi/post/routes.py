@@ -51,7 +51,7 @@ def update_post(id: int, update: PostUpdate):
     if "admin" not in decode_token[update.user_name]:
         raise HTTPException(422, "you are not update post, admin just a update post...")
     posts[id] = {"title": update.title, "content": update.content, "author": posts[id]['author']}
-    return {id: "info changed successfully"}
+    return {id: "post info changed successfully"}
 
 
 @post_router.delete("/post/{id}")

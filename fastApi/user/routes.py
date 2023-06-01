@@ -1,14 +1,16 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from user.models import UserIn, UserUpdate, UserLogin, UserLogout
 from database import users, user_jwt, sessions
 from user.utilse import hash_pass, verify_password, create_access_token, create_session, decode_access_token
 from datetime import datetime, timedelta
+from fastapi.security import OAuth2PasswordBearer
 
 user_router = APIRouter(tags=['user'])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/")
 
 
 @user_router.post("/users")
-def add_user(user: UserIn):
+def add_user(user: UserIn , token: str = Depends(oauth2_scheme)):
     if user.user_name in users.keys():
         raise HTTPException(403, "the user name has been exists")
     for item in users.values():
@@ -19,7 +21,7 @@ def add_user(user: UserIn):
 
 
 @user_router.post('/login')
-def login_user(user: UserLogin):
+def login_user(user: UserLogin, token: str = Depends(oauth2_scheme)):
     if user.user_name not in users.keys():
         raise HTTPException(404, "username or password invalid")
     if not verify_password(user.password, users[user.user_name]['password']):
@@ -56,7 +58,11 @@ def get_all_users():
 def get_user_by_name(username: str):
     user = users.get(username)
     if user: 
-        return {username: users[username]['email']}
+        return {
+            'User Name': username,
+            'Email': users[username]['email'],
+            'User Roll': users[username]['roll']
+            }
     else: 
         HTTPException(404, 'user not found')
         
